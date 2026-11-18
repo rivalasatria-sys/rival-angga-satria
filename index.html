@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Koding dan Kecerdasan Artifisial: Misi Teknisi Digital</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#0b1b33;overflow:hidden;font-family:"Segoe UI",Roboto,Arial,sans-serif}
+#stage{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform-origin:center;background:#f2f7ff;color:#12263f;overflow:hidden}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column}
+.hdr{height:64px;background:#12315c;color:#fff;display:flex;align-items:center;gap:16px;padding:0 20px;flex:none}
+.ttl{font-size:24px;font-weight:700;flex:1}
+.hud{display:flex;align-items:center;gap:12px}
+.chip{background:#fff;color:#12263f;border-radius:20px;padding:6px 14px;font-size:18px;font-weight:600}
+.hr{font-size:28px;color:#8a9bb5}.hr.on{color:#ff5d73}
+.btn{min-height:48px;padding:0 24px;font-size:20px;font-weight:700;border:2px solid #1f6feb;background:#fff;color:#1556b8;border-radius:12px;cursor:pointer;font-family:inherit}
+.btn.pri{background:#1f6feb;color:#fff}
+.btn.sm{min-height:44px;font-size:18px;padding:0 16px}
+.btn.ghost{background:transparent;color:#fff;border-color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:hover:not(:disabled){filter:brightness(.93)}
+.body{flex:1;padding:12px 24px;display:flex;flex-direction:column;gap:10px;min-height:0}
+.taskbar{height:40px;display:flex;align-items:center;justify-content:space-between;font-size:20px;font-weight:700;color:#12315c;flex:none}
+.prog{font-size:18px;background:#dbe8ff;border-radius:16px;padding:4px 14px;font-weight:600}
+.lv{flex:1;min-height:0;display:flex;flex-direction:column;gap:10px}
+.fb{height:64px;border-radius:12px;display:flex;align-items:center;padding:0 18px;font-size:18px;font-weight:600;line-height:1.25;flex:none}
+.fb.ok{background:#d9f5e5;color:#0d5c34;border:2px solid #1a9a5b}
+.fb.no{background:#fde0e0;color:#8f1d1d;border:2px solid #d64545}
+.fb.info{background:#e3eeff;color:#12315c;border:2px solid #1f6feb}
+.fb.empty{visibility:hidden}
+.ftr{height:72px;background:#fff;border-top:2px solid #d5e1f2;display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex:none}
+.dots{display:flex;gap:10px;align-items:center;font-size:18px;font-weight:600}
+.dot{width:16px;height:16px;border-radius:50%;background:#c4d3ea}.dot.cur{background:#1f6feb;outline:3px solid #a9c8ff}.dot.dn{background:#1a9a5b}
+.card{display:flex;align-items:center;min-height:58px;padding:6px 16px;font-size:18px;font-family:inherit;text-align:left;background:#fff;color:#12263f;border:2px solid #9db8e0;border-radius:12px;cursor:pointer}
+.card:hover:not(:disabled){background:#eaf2ff;border-color:#1f6feb}
+.card.sel{background:#fff3c4;border-color:#f5b301}
+.card.ok{background:#d9f5e5;border-color:#1a9a5b;color:#0d5c34}
+.card.no{background:#fde0e0;border-color:#d64545;color:#8f1d1d}
+.card:disabled{cursor:default;color:#12263f}
+.card.ok:disabled{color:#0d5c34}
+.two{display:flex;gap:28px;flex:1;min-height:0}
+.col{display:flex;flex-direction:column;gap:8px;width:260px}
+.col.wide{flex:1;width:auto}
+.col .card{flex:1}
+.act{display:flex;gap:14px;justify-content:center;flex:none}
+.shake{animation:shk .35s}
+@keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.rows{display:flex;flex-direction:column;gap:6px;flex:1;min-height:0}
+.row{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid #9db8e0;border-radius:12px;padding:0 12px;flex:1;font-size:18px;cursor:grab}
+.row.ok{background:#d9f5e5;border-color:#1a9a5b}.row.bad{background:#fde0e0;border-color:#d64545}
+.num{width:34px;height:34px;border-radius:50%;background:#12315c;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none}
+.txt{flex:1}
+.ib{width:44px;height:36px;border:2px solid #1f6feb;background:#fff;color:#1556b8;border-radius:8px;font-size:16px;cursor:pointer}
+.lab{display:flex;gap:16px;flex:1;min-height:0}
+.codebox{flex:1.15;background:#0f2038;color:#e8f1ff;border-radius:14px;padding:16px 20px;font-family:Consolas,"Courier New",monospace;font-size:20px;display:flex;flex-direction:column;justify-content:center;gap:12px}
+.cl{display:flex;align-items:center;gap:10px;white-space:pre}
+.ln{color:#8fb0e0;width:26px;text-align:right;font-size:16px}
+.kw{color:#ffd166;font-style:normal;font-weight:700}
+select{font-size:19px;min-height:44px;border-radius:8px;border:2px solid #f5b301;background:#fff;color:#12263f;padding:0 8px;font-family:inherit}
+.sim{flex:1;background:#fff;border:2px solid #9db8e0;border-radius:14px;padding:14px 18px;display:flex;flex-direction:column;gap:10px;font-size:18px}
+.simrow{display:flex;align-items:center;gap:24px;justify-content:center;flex:1}
+.thermo{width:38px;height:170px;background:#dbe8ff;border:3px solid #12315c;border-radius:20px;position:relative;overflow:hidden}
+#tb{position:absolute;bottom:0;left:0;right:0;background:#1f6feb;transition:height .15s}
+#tb.hot{background:#e0334a}
+.fanwrap{width:150px;height:150px;border:4px solid #12315c;border-radius:50%;background:#eef4ff}
+.blades{transform-origin:0 0}
+.fanwrap.on .blades{animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.stt{font-weight:700;text-align:center;min-height:50px}
+input[type=range]{width:100%;height:30px}
+.code{background:#0f2038;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.cline{display:flex;gap:12px;align-items:center;min-height:48px;padding:0 12px;background:#17304f;color:#e8f1ff;border:2px solid transparent;border-radius:8px;cursor:pointer;font-family:Consolas,"Courier New",monospace;font-size:21px;text-align:left}
+.cline code{white-space:pre;font-family:inherit}
+.cline:hover:not(:disabled){background:#24497a;border-color:#8fb0e0}
+.cline:disabled{cursor:default;color:#e8f1ff}
+.cline.bug{background:#7a1f2a;border-color:#ff8a98}
+.cline.fixed{background:#14663d;border-color:#5fe0a0}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opts .card{font-family:Consolas,monospace;font-size:20px}
+.l5{display:flex;gap:18px;flex:1;min-height:0}
+.mid{flex:1;display:flex;flex-direction:column;gap:12px}
+.zones{display:flex;gap:16px;flex:1;align-items:stretch}
+.zone{width:190px;border:3px dashed #9db8e0;border-radius:16px;background:#fff;font-size:22px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;color:#12263f;font-family:inherit}
+.zone small{font-size:15px;font-weight:600;color:#3b5478}
+.zone:hover:not(:disabled){background:#eaf2ff}
+.zone.right{border-color:#1a9a5b;background:#d9f5e5;border-style:solid}
+.zone.over{background:#fff3c4;border-color:#f5b301}
+.msg{flex:1;background:#fff;border:3px solid #1f6feb;border-radius:16px;padding:18px;font-size:23px;display:flex;align-items:center;text-align:center;justify-content:center;cursor:grab;line-height:1.35}
+.msg.ok{border-color:#1a9a5b;background:#d9f5e5}.msg.no{border-color:#d64545;background:#fde0e0}
+.notes{width:300px;background:#fff;border:2px solid #9db8e0;border-radius:14px;padding:12px 16px;font-size:17px;overflow:hidden}
+.notes h3{margin:0 0 6px;font-size:19px;color:#12315c}
+.notes ul{margin:0;padding-left:20px}.notes li{margin-bottom:4px}
+.meter{height:22px;background:#dbe8ff;border-radius:11px;overflow:hidden}
+.meter div{height:100%;background:#1a9a5b}
+.timer{height:14px;background:#dbe8ff;border-radius:7px;overflow:hidden;flex:none}
+#tbar{height:100%;width:100%;background:#1f6feb}
+.story{background:#fff;border:2px solid #9db8e0;border-left:8px solid #1f6feb;border-radius:12px;padding:14px 18px;font-size:22px;line-height:1.35;flex:none}
+.opts6{display:flex;flex-direction:column;gap:8px;flex:1}.opts6 .card{flex:1;font-size:19px}
+.modal{position:absolute;inset:0;background:rgba(10,25,50,.78);display:flex;align-items:center;justify-content:center;z-index:5}
+.modal.hidden{display:none}
+.mbox{background:#fff;border-radius:20px;padding:30px 40px;width:640px;text-align:center;font-size:21px;border:4px solid #1f6feb}
+.mbox h2{margin:0 0 8px;font-size:34px;color:#12315c}
+.mbtn{display:flex;gap:12px;justify-content:center;margin-top:16px}
+.bigstars{font-size:60px;color:#f5b301;letter-spacing:6px}
+.bigstars .off{color:#c4d3ea}
+/* cover & others */
+.cover{background:#12315c;color:#fff;flex-direction:row;align-items:center;padding:0 80px;gap:60px}
+.cover h1{font-size:50px;line-height:1.15;margin:0 0 18px}
+.cover .pem{font-size:26px;color:#ffd166;margin:0 0 30px;font-weight:600}
+.cover .sub{font-size:19px;color:#cfe0ff;margin-top:22px}
+.lead{font-size:20px;margin:4px 0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;flex:1;min-height:0}
+.lcard{background:#fff;border:3px solid #9db8e0;border-radius:16px;padding:14px 18px;display:flex;flex-direction:column;gap:4px;cursor:pointer;text-align:left;font-family:inherit;color:#12263f}
+.lcard:hover:not(:disabled){border-color:#1f6feb;background:#eaf2ff}
+.lcard:disabled{opacity:.55;cursor:not-allowed}
+.lcard .nm{font-size:23px;font-weight:700}.lcard .sk{font-size:17px;color:#3b5478}
+.lcard .bd{display:inline-block;background:#12315c;color:#fff;border-radius:14px;padding:2px 12px;font-size:16px;font-weight:700;align-self:flex-start}
+.lcard .st{color:#f5b301;font-size:26px;margin-top:auto}
+.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;flex:1;min-height:0}
+.panel{background:#fff;border:2px solid #9db8e0;border-radius:14px;padding:14px 20px;font-size:18px;line-height:1.4}
+.panel h3{margin:0 0 8px;font-size:22px;color:#12315c}
+.panel ul,.panel ol{margin:0;padding-left:22px}.panel li{margin-bottom:6px}
+.rtab{width:100%;border-collapse:collapse;font-size:19px}
+.rtab td,.rtab th{padding:6px 10px;border-bottom:1px solid #d5e1f2;text-align:left}
+.gold{color:#f5b301}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+const $=(s,e=document)=>e.querySelector(s);
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const stage=$('#stage');
+const CREATOR={nama:"[Nama Kreator, gelar]",org:"[Nama Sekolah / Institusi]"};
+const LEVELS=[
+ {t:"Kenali Istilah",sk:"Konsep dasar koding & KA",ic:"🧩",max:60},
+ {t:"Susun Algoritma",sk:"Urutan langkah logis",ic:"⚙️",max:40},
+ {t:"Lab Kipas Otomatis",sk:"Percabangan (JIKA-MAKA)",ic:"🌡️",max:60},
+ {t:"Pemburu Bug",sk:"Perulangan & debugging",ic:"🐞",max:45},
+ {t:"Latih Filter Spam",sk:"Data latih & klasifikasi KA",ic:"📨",max:90},
+ {t:"Keputusan Etis",sk:"Etika & keamanan memakai KA",ic:"⚖️",max:40}
+];
+const S={screen:'cover',level:0,best:Array(6).fill(null)};
+let L={},timer=null,A={},muted=false,ac=null;
+const LV=[];
+/* ---------- audio ---------- */
+function beep(f,d,type,v,t0){if(muted)return;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=type||'sine';o.frequency.value=f;const s=ac.currentTime+(t0||0);g.gain.setValueAtTime(v||.08,s);g.gain.exponentialRampToValueAtTime(.0001,s+d);o.connect(g);g.connect(ac.destination);o.start(s);o.stop(s+d)}catch(e){}}
+const sOk=()=>{beep(660,.15);beep(880,.2,'sine',.08,.12)};
+const sNo=()=>beep(170,.3,'sawtooth',.05);
+const sWin=()=>{[523,659,784,1046].forEach((f,i)=>beep(f,.22,'triangle',.08,i*.13))};
+function toggleMute(){muted=!muted;document.querySelectorAll('#mb').forEach(b=>b.textContent=muted?'🔇 Suara mati':'🔊 Suara')}
+const muteBtn=()=>`<button class="btn sm ghost" id="mb" onclick="toggleMute()">${muted?'🔇 Suara mati':'🔊 Suara'}</button>`;
+/* ---------- helpers ---------- */
+const starsHtml=n=>[1,2,3].map(i=>`<span class="${i<=n?'':'off'}">★</span>`).join('');
+const totalBest=ex=>S.best.reduce((a,b,i)=>a+(b&&i!==ex?b.score:0),0);
+function fit(){const s=Math.min(innerWidth/1280,innerHeight/720);stage.style.transform=`translate(-50%,-50%) scale(${s})`}
+addEventListener('resize',fit);fit();
+function fb(msg,type){const e=$('#fb');if(!e)return;e.className='fb '+(msg?type:'empty');e.innerHTML=msg||''}
+function hud(){if(S.screen!=='level')return;const hh=$('#hh');if(hh)hh.innerHTML=L.nohearts?'':[0,1,2].map(i=>`<span class="hr ${i<L.hearts?'on':''}">♥</span>`).join('');const hs=$('#hs');if(hs)hs.textContent=L.score;const ht=$('#ht');if(ht)ht.textContent=totalBest(S.level)+L.score}
+function shake(){const e=$('#lv');if(!e)return;e.classList.remove('shake');void e.offsetWidth;e.classList.add('shake')}
+function modal(h){const m=$('#modal');m.innerHTML=`<div class="mbox">${h}</div>`;m.classList.remove('hidden')}
+function wrong(){L.hearts--;sNo();shake();hud();if(L.hearts<=0){failLevel();return true}return false}
+function failLevel(){clearInterval(timer);modal(`<h2>Nyawa habis 💔</h2><p>Jangan menyerah! Setiap kesalahan adalah bahan belajar. Coba lagi, ya.</p><div class="mbtn"><button class="btn" onclick="go('menu')">Ke Menu</button><button class="btn pri" onclick="startLevel(S.level)">Coba Lagi</button></div>`)}
+function finish(stars){clearInterval(timer);L.done=true;const p=S.best[S.level];if(!p||L.score>=p.score)S.best[S.level]={score:L.score,stars};hud();const nx=$('#nx');if(nx)nx.disabled=false;sWin();const last=S.level===5;
+ modal(`<h2>Misi selesai! 🎉</h2><div class="bigstars">${starsHtml(stars)}</div><p>Skor level ini: <b>${L.score}</b> dari ${LEVELS[S.level].max}</p><div class="mbtn"><button class="btn" onclick="startLevel(S.level)">Main Ulang</button><button class="btn" onclick="go('menu')">Menu</button><button class="btn pri" onclick="nextLevel()">${last?'Hasil Akhir':'Berikutnya'} ▶</button></div>`)}
+function nextLevel(){if(S.level<5)startLevel(S.level+1);else go('result')}
+function go(s){S.screen=s;draw()}
+function startLevel(i){S.level=i;L={hearts:3,score:0,done:false,nohearts:i===5};S.screen='level';draw();LV[i]($('#lv'));hud()}
+/* ---------- screens ---------- */
+const robot=`<svg viewBox="0 0 200 200" width="330" height="330" role="img" aria-label="Maskot robot"><line x1="100" y1="22" x2="100" y2="46" stroke="#fff" stroke-width="6"/><circle cx="100" cy="16" r="10" fill="#f5b301"/><rect x="38" y="46" width="124" height="100" rx="26" fill="#fff"/><circle cx="74" cy="92" r="15" fill="#1f6feb"/><circle cx="126" cy="92" r="15" fill="#1f6feb"/><circle cx="78" cy="88" r="4" fill="#fff"/><circle cx="130" cy="88" r="4" fill="#fff"/><rect x="72" y="118" width="56" height="10" rx="5" fill="#12315c"/><rect x="58" y="152" width="84" height="34" rx="12" fill="#8fb8ff"/><rect x="22" y="80" width="14" height="36" rx="7" fill="#8fb8ff"/><rect x="164" y="80" width="14" height="36" rx="7" fill="#8fb8ff"/></svg>`;
+function cover(){return `<div class="screen cover"><div style="flex:1"><h1>Koding dan Kecerdasan Artifisial:<br><span class="gold">Misi Teknisi Digital</span></h1><p class="pem">Bisakah kamu melatih mesin mengenali spam hanya dengan contoh?</p><button class="btn pri" style="font-size:24px;min-height:58px" onclick="go('guide')">Mulai ▶</button><div class="sub">Gim edukasi · Bidang Keahlian Teknologi Informasi</div></div><div>${robot}</div><div style="position:absolute;top:16px;right:20px">${muteBtn()}</div></div>`}
+function guide(){return `<div class="screen"><div class="hdr"><div class="ttl">Panduan</div>${muteBtn()}</div><div class="body"><div class="cols3">
+<div class="panel"><h3>🎯 Tujuan Pembelajaran</h3><p style="margin:0 0 6px">Setelah bermain, kamu mampu:</p><ol><li>Menjelaskan istilah dasar koding dan kecerdasan artifisial (KA).</li><li>Menyusun algoritma dan logika percabangan sederhana.</li><li>Menemukan dan memperbaiki kesalahan perulangan (bug).</li><li>Menjelaskan cara model KA belajar dari data latih.</li><li>Memakai KA secara etis dan aman.</li></ol></div>
+<div class="panel"><h3>🎮 Cara Bermain</h3><ul><li>Ada <b>6 misi</b>. Selesaikan berurutan; misi yang sudah selesai boleh diulang.</li><li>Setiap misi punya <b>3 nyawa ♥</b>. Jawaban salah mengurangi nyawa.</li><li>Jawaban benar menambah <b>skor</b>. Sisa nyawa menentukan <b>bintang ★</b>.</li><li>Misi 6 dibatasi waktu, jadi putuskan dengan cepat dan tepat.</li><li>Kamu akan mencocokkan, mengurutkan, mengisi, memilih, dan menyeret.</li></ul></div>
+<div class="panel"><h3>🧭 Tombol Penting</h3><ul><li><b>☰ Menu</b>: kembali ke daftar misi kapan saja.</li><li><b>◀ Kembali</b> dan <b>Berikutnya ▶</b>: pindah halaman.</li><li><b>🔊 Suara</b>: menyalakan atau mematikan efek suara.</li><li>Kotak berwarna di bawah soal memberi <b>umpan balik</b>: hijau benar, merah salah, biru petunjuk.</li></ul></div>
+</div></div><div class="ftr"><button class="btn" onclick="go('cover')">◀ Kembali</button><span></span><button class="btn pri" onclick="go('menu')">Menu Misi ▶</button></div></div>`}
+function menu(){const all=S.best.every(Boolean);return `<div class="screen"><div class="hdr"><div class="ttl">Pilih Misi</div><span class="chip">Total skor: ${totalBest(-1)}</span>${muteBtn()}</div><div class="body"><p class="lead">Selesaikan misi secara berurutan. Misi yang sudah selesai boleh kamu ulang untuk mendapat bintang lebih banyak.</p><div class="grid">${LEVELS.map((d,i)=>{const open=i===0||S.best[i-1];const b=S.best[i];return `<button class="lcard" ${open?'':'disabled'} onclick="startLevel(${i})"><span class="bd">Level ${i+1}</span><span class="nm">${d.ic} ${d.t}</span><span class="sk">${d.sk}</span><span class="st">${open?(b?starsHtml(b.stars).replace(/class="off"/g,'style="color:#c4d3ea"'):'<span style="font-size:18px;color:#1556b8">Belum dimainkan</span>'):'<span style="font-size:18px;color:#3b5478">🔒 Selesaikan misi sebelumnya</span>'}</span></button>`}).join('')}</div></div><div class="ftr"><button class="btn" onclick="go('guide')">◀ Kembali</button><span></span><button class="btn pri" ${all?'':'disabled'} onclick="go('result')">Hasil Akhir ▶</button></div></div>`}
+function levelScreen(){const i=S.level,d=LEVELS[i];return `<div class="screen"><div class="hdr"><button class="btn sm" onclick="go('menu')">☰ Menu</button><div class="ttl">Level ${i+1}: ${d.t}</div><div class="hud"><span id="hh"></span><span class="chip">Skor <b id="hs">0</b></span><span class="chip">Total <b id="ht">0</b></span>${muteBtn()}</div></div><div class="body"><div class="taskbar"><span id="task"></span><span class="prog" id="prog"></span></div><div id="lv" class="lv"></div><div id="fb" class="fb empty"></div></div><div class="ftr"><button class="btn" onclick="go('menu')">◀ Kembali</button><div class="dots">Level ${i+1} dari 6 ${LEVELS.map((x,k)=>`<span class="dot ${k===i?'cur':(S.best[k]?'dn':'')}"></span>`).join('')}</div><button class="btn pri" id="nx" onclick="nextLevel()" ${S.best[i]?'':'disabled'}>${i===5?'Hasil Akhir':'Berikutnya'} ▶</button></div><div id="modal" class="modal hidden"></div></div>`}
+function result(){const tot=totalBest(-1),max=LEVELS.reduce((a,b)=>a+b.max,0),pct=tot/max;const title=pct>=.85?'Teknisi Digital Ahli':pct>=.6?'Teknisi Digital Mahir':'Teknisi Digital Pemula';const stars=S.best.reduce((a,b)=>a+(b?b.stars:0),0);
+ return `<div class="screen"><div class="hdr"><div class="ttl">Hasil Akhir</div>${muteBtn()}</div><div class="body"><div style="display:flex;gap:16px;flex:1;min-height:0"><div class="panel" style="flex:1"><h3>🏅 ${title}</h3><p style="font-size:22px;margin:4px 0">Skor total: <b>${tot}</b> dari ${max} (${Math.round(pct*100)}%)<br>Bintang: <b class="gold">★ ${stars}</b> dari 18</p><table class="rtab"><tr><th>Misi</th><th>Skor</th><th>Bintang</th></tr>${LEVELS.map((d,i)=>{const b=S.best[i];return `<tr><td>${i+1}. ${d.t}</td><td>${b?b.score:0}/${d.max}</td><td class="gold">${b?'★'.repeat(b.stars):'-'}</td></tr>`}).join('')}</table></div><div class="panel" style="flex:1"><h3>📚 Rangkuman Materi</h3><ul><li><b>Algoritma</b> adalah langkah logis dan berurutan untuk menyelesaikan masalah.</li><li><b>Percabangan</b> (JIKA-MAKA-LAINNYA) memilih tindakan berdasarkan kondisi; periksa selalu nilai batasnya.</li><li><b>Perulangan</b> harus punya syarat berhenti agar tidak berjalan tanpa akhir.</li><li><b>Model KA</b> belajar dari data latih yang banyak, beragam, dan berlabel benar.</li><li>Gunakan KA secara etis: periksa hasilnya, jaga data pribadi, hindari bias, dan lindungi kata sandi.</li></ul></div></div></div><div class="ftr"><button class="btn" onclick="go('menu')">◀ Kembali</button><button class="btn" onclick="go('menu')">Ulangi Misi</button><button class="btn pri" onclick="go('credits')">Informasi Kreator ▶</button></div></div>`}
+function credits(){return `<div class="screen"><div class="hdr"><div class="ttl">Informasi Kreator</div>${muteBtn()}</div><div class="body"><div class="cols3" style="grid-template-columns:1fr 1fr"><div class="panel"><h3>👤 Kreator</h3><p style="margin:0 0 8px"><b>${CREATOR.nama}</b><br>${CREATOR.org}</p><h3>📘 Materi</h3><p style="margin:0">Koding dan Kecerdasan Artifisial: Misi Teknisi Digital. Gim edukasi untuk bidang keahlian Teknologi Informasi.</p></div><div class="panel"><h3>🖼️ Keterangan Aset</h3><ul><li>Seluruh ilustrasi, ikon, dan animasi dibuat dengan kode (SVG dan CSS). Ilustrasi ini dibuat oleh AI.</li><li>Efek suara dibangkitkan langsung oleh peramban (Web Audio), tanpa berkas audio.</li><li>Emoji tampil mengikuti font bawaan perangkat.</li><li>Tidak ada aset atau tautan eksternal, dan tidak ada iklan.</li></ul></div></div></div><div class="ftr"><button class="btn" onclick="go('result')">◀ Kembali</button><button class="btn" onclick="go('cover')">Ke Laman Muka</button><span></span></div></div>`}
+function draw(){clearInterval(timer);const m={cover,guide,menu,level:levelScreen,result,credits};stage.innerHTML=m[S.screen]();if(S.screen==='level'){hud()}}
+/* ---------- LEVEL 1: cocokkan ---------- */
+LV[0]=function(lv){
+ $('#task').textContent='Cocokkan setiap istilah dengan definisinya.';
+ const P=[['Algoritma','Langkah-langkah logis dan berurutan untuk menyelesaikan suatu masalah','Contoh: resep masakan atau alur kerja mesin kasir.'],
+ ['Variabel','Wadah bernama untuk menyimpan data di dalam program','Contoh: suhu = 32 menyimpan angka 32.'],
+ ['Percabangan','Struktur yang memilih tindakan berdasarkan suatu kondisi (JIKA-MAKA)','Contoh: JIKA stok kosong MAKA tampilkan peringatan.'],
+ ['Perulangan','Struktur yang mengulang instruksi sampai syarat tertentu terpenuhi','Contoh: mencetak nomor 1 sampai 100.'],
+ ['Kecerdasan Artifisial','Kemampuan mesin meniru kecerdasan manusia, misalnya mengenali pola dan mengambil keputusan','Contoh: aplikasi yang mengenali suara.'],
+ ['Data latih','Kumpulan contoh yang dipakai untuk melatih model KA agar belajar','Contoh: ribuan pesan berlabel spam atau aman.']];
+ const dord=shuffle([0,1,2,3,4,5]);let sel=null;const done=new Set();
+ function render(){
+  lv.innerHTML=`<div class="two"><div class="col">${P.map((p,i)=>`<button class="card ${done.has(i)?'ok':''} ${sel===i?'sel':''}" ${done.has(i)?'disabled':''} onclick="A.t(${i})"><b>${p[0]}</b></button>`).join('')}</div><div class="col wide">${dord.map(i=>`<button class="card ${done.has(i)?'ok':''}" ${done.has(i)?'disabled':''} onclick="A.d(${i})">${p2(i)}</button>`).join('')}</div></div>`;
+  $('#prog').textContent=`Berhasil: ${done.size} dari 6`;
+ }
+ const p2=i=>P[i][1];
+ A.t=i=>{sel=i;render();fb('Sekarang pilih definisi yang tepat di kolom kanan.','info')};
+ A.d=i=>{
+  if(sel===null){fb('Pilih istilah di kolom kiri terlebih dahulu.','info');return}
+  if(sel===i){done.add(i);L.score+=10;sOk();hud();fb(`Tepat! <b>${P[i][0]}</b>. ${P[i][2]}`,'ok');sel=null;render();if(done.size===6)setTimeout(()=>finish(L.hearts),900)}
+  else{fb('Belum tepat. Baca lagi definisinya dan cari kata kunci yang cocok dengan istilah itu.','no');sel=null;if(wrong())return;render()}
+ };
+ render();fb('Klik satu istilah, lalu klik definisinya.','info');
+};
+/* ---------- LEVEL 2: urutkan ---------- */
+LV[1]=function(lv){
+ const R=[{n:'Program Kasir Kantin',s:['Mulai program','Masukkan nama barang dan jumlah beli','Hitung total = harga × jumlah','Tampilkan total belanja','Terima uang bayar','Hitung kembalian = bayar − total','Cetak struk lalu selesai']},
+ {n:'Pendaftaran Akun Aplikasi',s:['Tampilkan formulir pendaftaran','Pengguna mengisi data diri','Sistem memvalidasi isian formulir','Simpan data ke basis data','Kirim email konfirmasi','Tampilkan pesan "Pendaftaran berhasil"']}];
+ let r=0,order,checked=false,drag=null,solved=false;
+ function begin(){const n=R[r].s.length;do{order=shuffle([...Array(n).keys()])}while(order.every((v,i)=>v===i));checked=false;solved=false;render();fb('Seret baris atau gunakan tombol ▲ ▼, lalu tekan Periksa Urutan.','info')}
+ function render(){
+  const g=R[r];$('#task').textContent=`Putaran ${r+1} dari ${R.length} — Susun algoritma: ${g.n}`;$('#prog').textContent=`Ada ${g.s.length} langkah`;
+  lv.innerHTML=`<div class="rows">${order.map((idx,pos)=>`<div class="row ${checked?(idx===pos?'ok':'bad'):''}" ${solved?'':'draggable="true"'} data-p="${pos}"><span class="num">${pos+1}</span><span class="txt">${g.s[idx]}</span>${solved?'':`<button class="ib" aria-label="Naik" onclick="A.m(${pos},-1)">▲</button><button class="ib" aria-label="Turun" onclick="A.m(${pos},1)">▼</button>`}</div>`).join('')}</div><div class="act">${solved?`<button class="btn pri" onclick="A.next()">${r<R.length-1?'Putaran berikutnya ▶':'Selesai ▶'}</button>`:`<button class="btn pri" onclick="A.chk()">✔ Periksa Urutan</button>`}</div>`;
+  lv.querySelectorAll('.row[draggable]').forEach(row=>{row.ondragstart=e=>{drag=+row.dataset.p;e.dataTransfer.setData('text/plain','x')};row.ondragover=e=>e.preventDefault();row.ondrop=e=>{e.preventDefault();if(drag!==null){const it=order.splice(drag,1)[0];order.splice(+row.dataset.p,0,it);drag=null;checked=false;render()}}});
+ }
+ A.m=(p,d)=>{const q=p+d;if(q<0||q>=order.length)return;[order[p],order[q]]=[order[q],order[p]];checked=false;render()};
+ A.chk=()=>{checked=true;const n=order.filter((v,i)=>v===i).length;render();
+  if(n===order.length){solved=true;L.score+=20;sOk();hud();render();fb('Urutan benar! Algoritma yang baik selalu runtut: masukan, proses, lalu keluaran.','ok')}
+  else{fb(`${n} dari ${order.length} langkah sudah tepat (hijau). Perbaiki yang merah: pikirkan data apa yang dibutuhkan sebelum langkah itu.`,'no');wrong()}};
+ A.next=()=>{r++;if(r>=R.length)finish(L.hearts);else begin()};
+ begin();
+};
+/* ---------- LEVEL 3: lab kipas ---------- */
+LV[2]=function(lv){
+ const R=[{goal:'Kipas server menyala jika suhu LEBIH DARI 30°C.',op:'gt',th:30},{goal:'Kipas server menyala jika suhu 35°C ATAU LEBIH.',op:'ge',th:35}];
+ const OPN={gt:'>',ge:'≥',lt:'<',le:'≤'};
+ let r=0,tested;
+ const ideal=(g,t)=>g.op==='gt'?t>g.th:t>=g.th;
+ const sel=()=>({op:$('#sOp').value,th:$('#sTh').value,act:$('#sAct').value});
+ function build(){
+  tested=new Set();const g=R[r];
+  $('#task').textContent=`Misi lab ${r+1} dari ${R.length} — ${g.goal}`;$('#prog').textContent='Langkah: isi kode → jalankan → uji → kirim';
+  lv.innerHTML=`<div class="lab"><div class="codebox"><div class="cl"><span class="ln">1</span><span><i class="kw">suhu</i> = baca_sensor()</span></div><div class="cl"><span class="ln">2</span><span><i class="kw">JIKA</i> suhu</span><select id="sOp" onchange="A.ch()"><option value="">…</option><option value="gt">&gt;  lebih dari</option><option value="ge">≥  sama atau lebih</option><option value="lt">&lt;  kurang dari</option><option value="le">≤  sama atau kurang</option></select><select id="sTh" onchange="A.ch()"><option value="">…</option><option value="30">30</option><option value="35">35</option><option value="40">40</option></select><i class="kw">MAKA</i></div><div class="cl"><span class="ln">3</span><span>    kipas =</span><select id="sAct" onchange="A.ch()"><option value="">…</option><option value="HIDUP">HIDUP</option><option value="MATI">MATI</option></select></div><div class="cl"><span class="ln">4</span><span><i class="kw">LAINNYA</i></span></div><div class="cl"><span class="ln">5</span><span>    kipas = MATI</span></div></div>
+  <div class="sim"><div class="simrow"><div class="thermo"><div id="tb" style="height:32%"></div></div><div class="fanwrap" id="fan"><svg viewBox="-50 -50 100 100"><g class="blades"><ellipse cx="0" cy="-22" rx="9" ry="22" fill="#1f6feb"/><ellipse cx="0" cy="-22" rx="9" ry="22" fill="#1f6feb" transform="rotate(120)"/><ellipse cx="0" cy="-22" rx="9" ry="22" fill="#1f6feb" transform="rotate(240)"/></g><circle r="7" fill="#12315c"/></svg></div></div><div>Suhu sensor: <b id="tv">28</b>°C <small>(geser untuk mengubah)</small><input type="range" id="sT" min="20" max="45" value="28" oninput="A.sl()"></div><div class="stt" id="stt">Tekan "Jalankan Program" untuk menguji.</div></div></div>
+  <div class="act" id="actb"><button class="btn" onclick="A.run()">▶ Jalankan Program</button><button class="btn pri" onclick="A.send()">Kirim Jawaban</button></div>`;
+  A.sl();fb('Lengkapi bagian "…" lalu uji programmu di suhu berbeda.','info');
+ }
+ A.sl=()=>{const t=+$('#sT').value;$('#tv').textContent=t;const b=$('#tb');b.style.height=((t-20)/25*100)+'%';b.className=t>30?'hot':''};
+ A.ch=()=>{tested=new Set()};
+ A.run=()=>{const s=sel(),g=R[r];if(!s.op||!s.th||!s.act){fb('Lengkapi semua bagian "…" pada kode terlebih dahulu.','info');return}
+  const t=+$('#sT').value,th=+s.th;const cond=s.op==='gt'?t>th:s.op==='ge'?t>=th:s.op==='lt'?t<th:t<=th;const fan=cond?s.act:'MATI';
+  $('#fan').className='fanwrap'+(fan==='HIDUP'?' on':'');tested.add(t);
+  $('#stt').textContent=`Suhu ${t}°C → kondisi ${cond?'benar':'salah'} → kipas ${fan}`;
+  const want=ideal(g,t)?'HIDUP':'MATI';
+  if(fan===want){sOk();fb(`Hasil sesuai tujuan misi: pada ${t}°C kipas memang harus ${want}.`,'ok')}else{sNo();fb(`Belum sesuai tujuan: pada ${t}°C seharusnya kipas ${want}, tetapi programmu membuatnya ${fan}. Periksa lagi kodenya.`,'no')}};
+ A.send=()=>{const s=sel(),g=R[r];if(!s.op||!s.th||!s.act){fb('Lengkapi semua bagian "…" pada kode terlebih dahulu.','info');return}
+  const t=[...tested];if(!t.some(x=>ideal(g,x))||!t.some(x=>!ideal(g,x))){fb('Uji dulu programmu di dua kondisi: satu suhu yang seharusnya menyalakan kipas dan satu yang tidak.','info');return}
+  if(s.op===g.op&&+s.th===g.th&&s.act==='HIDUP'){L.score+=30;sOk();hud();fb('Program benar! Operator, batas suhu, dan tindakan sudah sesuai tujuan.','ok');
+   if(r<R.length-1)$('#actb').innerHTML='<button class="btn pri" onclick="A.next()">Misi lab berikutnya ▶</button>';else{$('#actb').innerHTML='';setTimeout(()=>finish(L.hearts),900)}}
+  else{fb('Masih ada bagian yang keliru. Uji di suhu batas (misalnya tepat di batas dan 1° di atasnya) untuk menemukan kesalahannya.','no');wrong()}};
+ A.next=()=>{r++;build()};
+ build();
+};
+/* ---------- LEVEL 4: bug ---------- */
+LV[3]=function(lv){
+ const R=[
+ {goal:'menampilkan angka 1 sampai 5.',code:['i = 1','selama i <= 5:','    tampilkan i','    i = i - 1'],bug:3,opts:['    i = i + 1','    i = i - 2','    i = i * 0'],ans:0,why:'Nilai i terus mengecil sehingga syarat i <= 5 selalu benar: perulangan tidak pernah berhenti (infinite loop). Penghitung harus ditambah.'},
+ {goal:'menjumlahkan semua harga dalam daftar_harga.',code:['total = 0','untuk setiap harga dalam daftar_harga:','    total = harga','tampilkan total'],bug:2,opts:['    total = harga','    total = total + harga','    total = total - harga'],ans:1,why:'Tanpa menambahkan ke total sebelumnya, nilai lama tertimpa di setiap putaran. Pakai total = total + harga.'},
+ {goal:'diskon 10% untuk belanja minimal Rp100.000.',code:['belanja = 120000','jika belanja < 100000:','    belanja = belanja * 0.9','tampilkan belanja'],bug:1,opts:['jika belanja <= 100000:','jika belanja >= 100000:','jika belanja == 0:'],ans:1,why:'Syarat "minimal 100.000" berarti belanja >= 100000. Tanda < justru memberi diskon pada belanja kecil.'}];
+ let r=0,phase=0,order=[];
+ function render(){
+  const g=R[r];$('#task').textContent=`Kasus ${r+1} dari ${R.length} — Tujuan program: ${g.goal}`;
+  $('#prog').textContent=phase===0?'Langkah 1/2: temukan baris yang salah':phase===1?'Langkah 2/2: pilih perbaikan':'Bug sudah diperbaiki';
+  const lines=g.code.map((c,i)=>{let txt=c,cls='';if(phase>=1&&i===g.bug)cls='bug';if(phase===2&&i===g.bug){txt=g.opts[g.ans];cls='fixed'}return `<button class="cline ${cls}" ${phase>0?'disabled':''} onclick="A.l(${i})"><span class="ln">${i+1}</span><code>${esc(txt)}</code></button>`}).join('');
+  let extra='';
+  if(phase===1)extra=`<div class="opts">${order.map(k=>`<button class="card" onclick="A.f(${k})">${esc(g.opts[k].trim())}</button>`).join('')}</div>`;
+  if(phase===2)extra=`<div class="act"><button class="btn pri" onclick="A.n()">${r<R.length-1?'Kasus berikutnya ▶':'Selesai ▶'}</button></div>`;
+  lv.innerHTML=`<div class="code">${lines}</div>${extra}`;
+ }
+ A.l=i=>{const g=R[r];if(i===g.bug){phase=1;order=shuffle([0,1,2]);sOk();fb(`Bug ditemukan di baris ${i+1}. Sekarang pilih perbaikan yang tepat.`,'ok');render()}
+  else{fb(`Baris ${i+1} sudah benar. Baca lagi tujuan program, lalu bayangkan hasilnya baris demi baris.`,'no');wrong()}};
+ A.f=k=>{const g=R[r];if(k===g.ans){phase=2;L.score+=15;sOk();hud();fb(g.why,'ok');render()}
+  else{fb('Perbaikan itu belum menghasilkan perilaku sesuai tujuan. Coba telusuri nilai variabel saat program berjalan.','no');wrong()}};
+ A.n=()=>{r++;if(r>=R.length)finish(L.hearts);else{phase=0;fb('Cari baris yang salah pada kasus berikutnya.','info');render()}};
+ render();fb('Klik baris yang menurutmu menjadi sumber bug.','info');
+};
+/* ---------- LEVEL 5: filter spam ---------- */
+LV[4]=function(lv){
+ const M=[
+ {t:'Selamat! Kamu menang undian Rp50 juta. Klik tautan ini sekarang juga!',spam:true,kw:'"menang undian" + tautan mendesak',why:'Hadiah tak terduga dan desakan klik adalah ciri penipuan.'},
+ {t:'Rapat OSIS dimajukan menjadi pukul 13.00 di ruang multimedia.',spam:false,kw:'informasi kegiatan sekolah',why:'Isinya informasi wajar tanpa permintaan data atau uang.'},
+ {t:'PROMO GILA!!! Pinjaman cair 5 menit tanpa syarat, transfer dulu biaya admin.',spam:true,kw:'"transfer dulu" + huruf kapital berlebihan',why:'Meminta uang di muka dan janji berlebihan adalah ciri spam.'},
+ {t:'Tugas praktik jaringan dikumpulkan hari Jumat ya.',spam:false,kw:'tugas dan jadwal sekolah',why:'Pesan rutin dari lingkungan belajar, tidak meminta data rahasia.'},
+ {t:'Akun bankmu diblokir. Kirim kode OTP ke nomor ini agar dibuka kembali.',spam:true,kw:'permintaan kode OTP',why:'Kode OTP bersifat rahasia dan tidak pernah diminta lewat pesan.'},
+ {t:'Jadwal PKL sudah terbit, cek di papan pengumuman jurusan.',spam:false,kw:'jadwal PKL',why:'Pemberitahuan biasa yang relevan bagi murid.'},
+ {t:'Dapatkan 10.000 followers gratis, cukup berikan kata sandi akunmu.',spam:true,kw:'"gratis" + minta kata sandi',why:'Meminta kata sandi untuk imbalan gratis adalah upaya pencurian akun.'},
+ {t:'Terima kasih sudah membeli, pesananmu dikirim besok pagi.',spam:false,kw:'konfirmasi pesanan',why:'Konfirmasi transaksi biasa tanpa permintaan data sensitif.'}];
+ let i=0,ans=false,right=0,notes=[],quiz=false,pick=null,qopts=shuffle([0,1,2]);
+ const QO=['Sedikit saja, asalkan semua contohnya mirip','Banyak, beragam, dan berlabel benar','Cukup contoh spam saja tanpa contoh pesan aman'];
+ function render(){
+  if(quiz)return rq();
+  const m=M[i];$('#task').textContent='Latih model: beri label setiap pesan sebagai SPAM atau AMAN.';$('#prog').textContent=`Pesan ${i+1} dari ${M.length}`;
+  const z=(k,lbl)=>`<button class="zone ${ans&&m.spam===(k==='spam')?'right':''}" data-z="${k}" ${ans?'disabled':''} onclick="A.lab('${k}')">${lbl}<small>klik atau seret pesan ke sini</small></button>`;
+  lv.innerHTML=`<div class="l5"><div class="mid"><div class="zones">${z('spam','🚫 SPAM')}<div class="msg ${ans?(pick===m.spam?'ok':'no'):''}" id="msg" ${ans?'':'draggable="true"'}>${m.t}</div>${z('aman','✅ AMAN')}</div><div class="act" style="min-height:48px">${ans?`<button class="btn pri" onclick="A.nx()">${i<M.length-1?'Pesan berikutnya ▶':'Lanjut ke pertanyaan ▶'}</button>`:''}</div></div><aside class="notes"><h3>📝 Catatan model</h3><ul>${notes.map(n=>`<li>${n}</li>`).join('')||'<li>Belum ada pola. Mulailah memberi label.</li>'}</ul></aside></div>`;
+  const msg=$('#msg');if(!ans){msg.ondragstart=e=>e.dataTransfer.setData('text/plain','x');lv.querySelectorAll('.zone').forEach(zn=>{zn.ondragover=e=>{e.preventDefault();zn.classList.add('over')};zn.ondragleave=()=>zn.classList.remove('over');zn.ondrop=e=>{e.preventDefault();A.lab(zn.dataset.z)}})}
+ }
+ A.lab=k=>{if(ans)return;const m=M[i];pick=(k==='spam');const ok=pick===m.spam;ans=true;notes.push(`Pola "${m.kw}" → ${m.spam?'cenderung SPAM':'cenderung AMAN'}`);
+  if(ok){right++;L.score+=10;sOk();hud();fb(`Benar! ${m.why}`,'ok');render()}else{fb(`Kurang tepat. Pesan ini ${m.spam?'SPAM':'AMAN'}. ${m.why}`,'no');render();wrong()}};
+ A.nx=()=>{if(i<M.length-1){i++;ans=false;pick=null;fb('','info');render()}else{quiz=true;fb('','info');render()}};
+ function rq(){
+  const acc=Math.round(right/M.length*100);$('#task').textContent='Pertanyaan reflektif: apa yang membuat model KA akurat?';$('#prog').textContent='Pertanyaan terakhir';
+  lv.innerHTML=`<div class="story">Modelmu sudah belajar dari ${M.length} contoh dan akurasi pelabelanmu <b>${acc}%</b>.<div class="meter" style="margin-top:8px"><div style="width:${acc}%"></div></div><p style="margin:10px 0 0"><b>Agar model filter spam akurat untuk pesan baru, data latih sebaiknya…</b></p></div><div class="opts6">${qopts.map(k=>`<button class="card" id="qo${k}" onclick="A.q(${k})">${QO[k]}</button>`).join('')}</div>`;
+ }
+ A.q=k=>{if(k===1){L.score+=10;sOk();hud();document.querySelectorAll('.opts6 .card').forEach(b=>b.disabled=true);$('#qo1').classList.add('ok');fb('Tepat! Data yang banyak, beragam, dan berlabel benar membuat model mampu mengenali pola pada pesan yang belum pernah dilihat.','ok');setTimeout(()=>finish(L.hearts),1200)}
+  else{const b=$('#qo'+k);b.classList.add('no');b.disabled=true;fb('Belum tepat. Pikirkan: jika model hanya melihat satu jenis contoh, apa yang terjadi saat ada pesan baru?','no');wrong()}};
+ render();fb('Seret pesan ke kotak yang tepat, atau klik kotaknya.','info');
+};
+/* ---------- LEVEL 6: keputusan etis ---------- */
+LV[5]=function(lv){
+ const Q=[
+ {s:'Kamu memakai asisten KA untuk membantu menyusun laporan PKL. Hasilnya sudah tampak rapi. Apa yang kamu lakukan?',o:[{t:'Menyalin semua jawaban KA tanpa membacanya ulang',p:0},{t:'Memeriksa fakta, menulis ulang dengan bahasamu, dan menyebutkan bahwa KA membantu',p:10},{t:'Menyalin sebagian saja agar tidak ketahuan',p:2}],why:'KA bisa keliru dan hasilnya perlu diverifikasi. Bersikap jujur tentang pemakaian KA adalah bagian dari etika kerja.'},
+ {s:'Sebuah aplikasi KA gratis meminta akses foto, kontak, dan lokasi hanya untuk fitur pengubah teks. Apa keputusanmu?',o:[{t:'Memberi akses hanya yang benar-benar dibutuhkan fitur tersebut',p:10},{t:'Mengizinkan semua akses agar cepat',p:0},{t:'Memakai tanpa membaca izin sama sekali',p:1}],why:'Prinsip minimalisasi data: berikan izin seperlunya demi melindungi privasi dan data pribadi.'},
+ {s:'Model absensi wajah di sekolahmu sering gagal mengenali beberapa temanmu karena data latihnya kurang beragam. Apa tindakanmu?',o:[{t:'Membiarkan saja karena sebagian besar berhasil',p:0},{t:'Meminta temanmu yang gagal absen manual selamanya',p:3},{t:'Mengusulkan penambahan data latih yang lebih beragam dan menguji ulang',p:10}],why:'Data yang tidak beragam menimbulkan bias. Perbaiki data dan uji ulang agar adil bagi semua.'},
+ {s:'Kode hasil KA yang akan kamu unggah ke repositori tim ternyata memuat kata sandi basis data di dalamnya. Tenggat tinggal 10 menit!',o:[{t:'Mengunggah apa adanya ke repositori publik',p:0},{t:'Menghapus kata sandi, memindahkannya ke penyimpanan rahasia, lalu mengunggah',p:10},{t:'Membiarkan karena repositorinya katanya privat',p:4}],why:'Kata sandi tidak boleh tertulis di dalam kode. Keamanan lebih penting daripada kecepatan.'}];
+ let i=0,locked=false,left=25;
+ function show(){
+  locked=false;const q=Q[i];$('#task').textContent=`Situasi ${i+1} dari ${Q.length} — putuskan sebelum waktu habis!`;$('#prog').textContent=`Poin saat ini: ${L.score}`;
+  lv.innerHTML=`<div class="timer"><div id="tbar"></div></div><div class="story">${q.s}</div><div class="opts6">${q.o.map((o,k)=>`<button class="card" onclick="A.p(${k})">${o.t}</button>`).join('')}</div><div class="act" id="act6" style="min-height:48px"></div>`;
+  fb('Pilih tindakan yang paling bertanggung jawab.','info');left=25;clearInterval(timer);
+  timer=setInterval(()=>{left-=.1;const b=$('#tbar');if(b){b.style.width=Math.max(0,left/25*100)+'%';if(left<8)b.style.background='#d64545'}if(left<=0){clearInterval(timer);A.p(-1)}},100);
+ }
+ A.p=k=>{if(locked)return;locked=true;clearInterval(timer);const q=Q[i];const p=k<0?0:q.o[k].p;L.score+=p;hud();
+  const best=q.o.reduce((a,o,x)=>o.p>q.o[a].p?x:a,0);
+  document.querySelectorAll('.opts6 .card').forEach((b,x)=>{b.disabled=true;if(x===best)b.classList.add('ok');else if(x===k)b.classList.add('no')});
+  (p===10?sOk:sNo)();fb(`${k<0?'Waktu habis! ':''}+${p} poin. ${q.why}`,p===10?'ok':'no');
+  $('#prog').textContent=`Poin saat ini: ${L.score}`;
+  $('#act6').innerHTML=`<button class="btn pri" onclick="A.n()">${i<Q.length-1?'Situasi berikutnya ▶':'Selesai ▶'}</button>`};
+ A.n=()=>{i++;if(i>=Q.length){finish(L.score>=30?3:L.score>=20?2:1)}else show()};
+ show();
+};
+draw();
+</script>
+</body>
+</html>
